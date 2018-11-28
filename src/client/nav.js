@@ -93,7 +93,7 @@ class nav extends Component {
                     ))}
                 </React.Fragment>
                 <li>
-                  <Link to="/about">About</Link>
+                  <Link to="/about">Aboutsss</Link>
                 </li>
               </ul>
 
