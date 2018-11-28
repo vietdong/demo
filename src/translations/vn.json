@@ -1,0 +1,36 @@
+{
+  "footer": {
+    "footer": "Chính sách bảo mật",
+    "footer2": "Quảng cáo",
+    "footer3": "© Bản quyền © Tất cả các quyền | Mẫu này được tạo bởi dongdv",
+    "about": "Về chúng tôi",
+    "category": "danh mục",
+    "Newsletter": "Tham gia bản tin của chúng tôi"
+  },
+  "member": {
+    "Edit Member": "Chỉnh sửa tài khoản",
+    "Product": "danh sách bàn viết",
+    "Analytics & pay": "Phân tích & thanh toán",
+    "Logout": "thoát tài khoản",
+    "Dashboad Member": "bảng điều khiển thành viên",
+    "home": "trang chủ",
+    "note": "Chú thích",
+    "note2": "Tài khoản của bạn có thể bật tính năng kiếm tiền từ trên",
+    "views": "lượt xem",
+    "number of posts": "Số lượng bài viết",
+    "Your estimated views": "Tổng số lượt xem",
+    "Current account balance": "Tổng Thu Nhập",
+    "waiting for approval": "Chờ phê duyệt",
+    "turn on money": "Bật kiếm tiền",
+    "Name": "Tên thành viên",
+    "Email": "Email",
+    "Password": "Mật khẩu",
+    "country": "Quốc gia",
+    "save": "lưu",
+    "Register account": "Đăng kí tài khoản",
+    "Register": "Đăng kí",
+    "Login account": "Đăng nhập tài khoản",
+    "Login": "Đăng nhập",
+    "Average CPM": "CPM trung bình"
+  }
+}

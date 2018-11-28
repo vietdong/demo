@@ -1,0 +1,36 @@
+{
+  "footer": {
+    "footer": "Privacy Policy",
+    "footer2": "Advertisement",
+    "footer3": "© Copyright © All rights reserved | This template is made with  by Colorlib ",
+    "about": "About",
+    "category": "Category",
+    "Newsletter": "Join Our Newsletter"
+  },
+  "member": {
+    "Edit Member": "Edit Member",
+    "Product": "List Post",
+    "Analytics & pay": "Analytics & pay",
+    "Logout": "Logout",
+    "Dashboad Member": "Dashboad Member",
+    "home": "Homepage",
+    "note": "Note",
+    "note2": "Your account can enable monetization on over",
+    "views": "views",
+    "number of posts": "number of posts",
+    "Your estimated views": "Total Views",
+    "Current account balance": "Total Earnings",
+    "waiting for approval": "waiting for approval",
+    "turn on money": "turn on money",
+    "Name": "Name",
+    "Email": "Email",
+    "Password": "Password",
+    "country": "country",
+    "save": "Save",
+    "Register account": "Register account ",
+    "Register": "Register",
+    "Login account": "Login account",
+    "Login": "Login",
+    "Average CPM": "Average CPM"
+  }
+}
