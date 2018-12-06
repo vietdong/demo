@@ -5,24 +5,22 @@ import Footer from "./footer";
 import $ from "jquery";
 import qc from "../images/ad-1.jpg";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-
-export default class hotnew extends Component {
+import { Helmet } from "react-helmet";
+import logo from "../images/logos.png";
+import {
+  setTranslations,
+  setDefaultLanguage,
+  translate,
+  setLanguage
+} from "react-multi-lang";
+class hotnew extends Component {
   constructor(props) {
     super(props);
     this.state = { loading: true, data: null };
   }
   componentDidMount() {
-    localStorage.setItem("lang", this.props.match.url);
-    var lang = "";
-    let url = this.props.match.url;
-
-    if (url === "/en" || url === "/vn") {
-      lang = url;
-    } else {
-      lang = "/vn";
-    }
     axios
-      .get("http://localhost:8000/hot_news" + lang)
+      .get("http://localhost:8000/hot_news/" + this.props.t("member.lang"))
       .then(req => req.data)
       .then(data => {
         this.setState({
@@ -38,28 +36,35 @@ export default class hotnew extends Component {
         console.log(err);
         this.setState({ loading: true });
       });
+    this.category();
+  }
+  category() {
     axios
-      .get("http://localhost:8000/category")
+      .get("http://localhost:8000/category/" + this.props.t("member.lang"), {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        }
+      })
       .then(req => req.data)
       .then(data => {
-        if (localStorage.getItem("lang") === "/en") {
-          this.setState({ countcate: data.en });
-        } else if (localStorage.getItem("lang") === "/vn") {
-          this.setState({ countcate: data.vn });
-        } else {
-          this.setState({ countcate: data.vn });
-        }
+        this.setState({ countcate: data.cate });
       });
   }
-
-  clickviews(id) {
-    axios.get("http://localhost:8000/clickviews/" + id);
+  componentWillReceiveProps(nextProps) {
+    this.category();
+    this.componentDidMount();
   }
+
   render() {
     const { data, loading, one_random, most, col3, posts } = this.state;
     const url = "http://localhost:8000/image/";
     return (
       <React.Fragment>
+        <Helmet>
+          <title>Homepage</title>
+          <link rel="shortcut icon" href={logo} />
+        </Helmet>
         <Navs />
         {loading ? <h1>loading....</h1> : ""}
         <div class="section">
@@ -73,7 +78,6 @@ export default class hotnew extends Component {
                         <Link
                           to={"detail/" + index.id + "-" + index.slug + ".html"}
                           class="post-img"
-                          onClick={() => this.clickviews(index.id)}
                         >
                           <img src={url + index.image} alt="" />
                         </Link>
@@ -93,9 +97,7 @@ export default class hotnew extends Component {
                             <span class="post-date">{index.create_date}</span>
                           </div>
                           <h3 class="post-title">
-                            <a onClick={() => this.clickviews(index.id)}>
-                              {index.title}
-                            </a>
+                            <a href="#">{index.title}</a>
                           </h3>
                         </div>
                       </div>
@@ -124,7 +126,6 @@ export default class hotnew extends Component {
                               "detail/" + index.id + "-" + index.slug + ".html"
                             }
                             class="post-img"
-                            onClick={() => this.clickviews(index.id)}
                           >
                             <img src={url + index.image} alt="" />
                           </Link>
@@ -144,9 +145,7 @@ export default class hotnew extends Component {
                               <span class="post-date">{index.create_date}</span>
                             </div>
                             <h3 class="post-title">
-                              <a onClick={() => this.clickviews(index.id)}>
-                                {index.title}
-                              </a>
+                              <a href="#">{index.title}</a>
                             </h3>
                           </div>
                         </div>
@@ -173,7 +172,6 @@ export default class hotnew extends Component {
                             : ""
                         }
                         class="post-img"
-                        onClick={() => this.clickviews(one_random.id)}
                       >
                         <img
                           src={one_random && url + one_random.image}
@@ -200,9 +198,7 @@ export default class hotnew extends Component {
                           </span>
                         </div>
                         <h3 class="post-title">
-                          <a onClick={() => this.clickviews(one_random.id)}>
-                            {one_random && one_random.title}
-                          </a>
+                          <a href="#">{one_random && one_random.title}</a>
                         </h3>
                       </div>
                     </div>
@@ -222,7 +218,6 @@ export default class hotnew extends Component {
                                   ".html"
                                 }
                                 class="post-img"
-                                onClick={() => this.clickviews(index.id)}
                               >
                                 <img src={url + index.image} alt="" />
                               </Link>
@@ -244,9 +239,7 @@ export default class hotnew extends Component {
                                   </span>
                                 </div>
                                 <h3 class="post-title">
-                                  <a onClick={() => this.clickviews(index.id)}>
-                                    {index.title}
-                                  </a>
+                                  <a href="#">{index.title}</a>
                                 </h3>
                               </div>
                             </div>
@@ -272,15 +265,12 @@ export default class hotnew extends Component {
                         <Link
                           to={"detail/" + index.id + "-" + index.slug + ".html"}
                           class="post-img"
-                          onClick={() => this.clickviews(index.id)}
                         >
                           <img src={url + index.image} alt="" />
                         </Link>
                         <div class="post-body">
                           <h3 class="post-title">
-                            <a onClick={() => this.clickviews(index.id)}>
-                              {index.title}
-                            </a>
+                            <a href="#">{index.title}</a>
                           </h3>
                         </div>
                       </div>
@@ -297,7 +287,6 @@ export default class hotnew extends Component {
                         <Link
                           to={"detail/" + index.id + "-" + index.slug + ".html"}
                           class="post-img"
-                          onClick={() => this.clickviews(index.id)}
                         >
                           <img src={url + index.image} alt="" />
                         </Link>
@@ -317,9 +306,7 @@ export default class hotnew extends Component {
                             <span class="post-date">{index.create_date}</span>
                           </div>
                           <h3 class="post-title">
-                            <a onClick={() => this.clickviews(index.id)}>
-                              {index.title}
-                            </a>
+                            <a href="#">{index.title}</a>
                           </h3>
                         </div>
                       </div>
@@ -372,7 +359,6 @@ export default class hotnew extends Component {
                       <Link
                         to={"detail/" + index.id + "-" + index.slug + ".html"}
                         class="post-img"
-                        onClick={() => this.clickviews(index.id)}
                       >
                         <img src={url + index.image} alt="" />
                       </Link>
@@ -392,9 +378,7 @@ export default class hotnew extends Component {
                           <span class="post-date">{index.create_date}</span>
                         </div>
                         <h3 class="post-title">
-                          <a onClick={() => this.clickviews(index.id)}>
-                            {index.title}
-                          </a>
+                          <a href="#">{index.title}</a>
                         </h3>
                       </div>
                     </div>
@@ -430,7 +414,6 @@ export default class hotnew extends Component {
                                   ".html"
                                 }
                                 class="post-img"
-                                onClick={() => this.clickviews(index.id)}
                               >
                                 <img src={url + index.image} alt="" />
                               </Link>
@@ -452,9 +435,7 @@ export default class hotnew extends Component {
                                   </span>
                                 </div>
                                 <h3 class="post-title">
-                                  <a onClick={() => this.clickviews(index.id)}>
-                                    {index.title}
-                                  </a>
+                                  <a href="#">{index.title}</a>
                                 </h3>
 
                                 <p>
@@ -476,7 +457,6 @@ export default class hotnew extends Component {
                                       ".html"
                                     }
                                     class="post-img"
-                                    onClick={() => this.clickviews(index.id)}
                                     style={{ color: "#0999ff" }}
                                   >
                                     see more
@@ -539,3 +519,4 @@ export default class hotnew extends Component {
     );
   }
 }
+export default translate(hotnew);

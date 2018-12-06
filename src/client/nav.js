@@ -5,6 +5,7 @@ import $ from "jquery";
 import "../css/client.css";
 import logo from "../images/logos.png";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import proxy from "http-proxy-middleware";
 import {
   setTranslations,
   setDefaultLanguage,
@@ -22,18 +23,16 @@ class nav extends Component {
     this.searchs = this.searchs.bind(this);
   }
   componentDidMount() {
-    console.log(localStorage.getItem("lang"));
     axios
-      .get("http://localhost:8000/category")
+      .get("http://localhost:8000/category/" + this.props.t("member.lang"), {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        }
+      })
       .then(req => req.data)
       .then(data => {
-        if (localStorage.getItem("lang") === "/en") {
-          this.setState({ data: data.en });
-        } else if (localStorage.getItem("lang") === "/vn") {
-          this.setState({ data: data.vn });
-        } else {
-          this.setState({ data: data.vn });
-        }
+        this.setState({ data: data.cate });
       });
   }
   searchs(event) {
@@ -59,6 +58,18 @@ class nav extends Component {
   }
   changeLang(lang) {
     setLanguage(lang);
+    var id = lang == "vn" ? 1 : 2;
+    axios
+      .get("http://localhost:8000/category/" + id, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        }
+      })
+      .then(req => req.data)
+      .then(data => {
+        this.setState({ data: data.cate });
+      });
   }
 
   render() {
@@ -93,7 +104,7 @@ class nav extends Component {
                     ))}
                 </React.Fragment>
                 <li>
-                  <Link to="/about">About</Link>
+                  <Link to="/about">Abouts</Link>
                 </li>
               </ul>
 
@@ -114,8 +125,7 @@ class nav extends Component {
                   <button class="search-btn" onClick={this.search}>
                     <i class="fa fa-search" />
                   </button>
-                  <Link
-                    to={"/vn"}
+                  <a
                     style={{ marginRight: "10px" }}
                     onClick={() => this.changeLang("vn")}
                   >
@@ -123,13 +133,13 @@ class nav extends Component {
                       src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Vietnam.svg/800px-Flag_of_Vietnam.svg.png"
                       width="23px"
                     />
-                  </Link>
-                  <Link to={"/en"} onClick={() => this.changeLang("en")}>
+                  </a>
+                  <a onClick={() => this.changeLang("en")}>
                     <img
                       src="https://kenh14cdn.com/2017/2-1503128133740.png"
                       width="30px"
                     />
-                  </Link>
+                  </a>
 
                   <div class="search-form">
                     <input

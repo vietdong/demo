@@ -5,12 +5,14 @@
   "dependencies": {
     "@tinymce/tinymce-react": "^2.3.0",
     "axios": "^0.18.0",
+    "chart.js": "^2.7.3",
     "jquery": "^3.3.1",
     "moment": "^2.22.2",
     "react": "^16.5.2",
     "react-alert": "^4.0.4",
     "react-alert-template-basic": "^1.0.0",
     "react-browser-router": "^2.1.2",
+    "react-chartjs-2": "^2.7.4",
     "react-cropper": "^1.0.1",
     "react-dom": "^16.5.2",
     "react-facebook-login": "^4.1.1",
@@ -37,5 +39,8 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "http-proxy-middleware": "^0.19.1"
+  }
 }

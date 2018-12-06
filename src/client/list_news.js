@@ -5,6 +5,14 @@ import Footer from "./footer";
 import qc from "../images/ad-1.jpg";
 import qc2 from "../images/ad-2.jpg";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
+import logo from "../images/logos.png";
+import {
+  setTranslations,
+  setDefaultLanguage,
+  translate,
+  setLanguage
+} from "react-multi-lang";
 class list_news extends Component {
   constructor(props) {
     super(props);
@@ -32,23 +40,36 @@ class list_news extends Component {
           most: data.most,
           loading: false
         });
-        console.log(data.one);
+        console.log(data + "ss");
       })
       .catch(err => {
         console.log(err);
         this.setState({ loading: true });
       });
+    this.category();
+    this.host_news();
+  }
+  category() {
     axios
-      .get("http://localhost:8000/category")
+      .get("http://localhost:8000/category/" + this.props.t("member.lang"))
       .then(req => req.data)
       .then(data => {
-        if (localStorage.getItem("lang") === "/en") {
-          this.setState({ countcate: data.en });
-        } else if (localStorage.getItem("lang") === "/vn") {
-          this.setState({ countcate: data.vn });
-        } else {
-          this.setState({ countcate: data.vn });
-        }
+        this.setState({ countcate: data.cate });
+      });
+  }
+  host_news() {
+    axios
+      .get("http://localhost:8000/hot_news/" + this.props.t("member.lang"))
+      .then(req => req.data)
+      .then(data => {
+        this.setState({
+          most: data.most,
+          loading: false
+        });
+      })
+      .catch(err => {
+        console.log(err);
+        this.setState({ loading: true });
       });
   }
   componentWillReceiveProps(nextProps) {
@@ -64,39 +85,30 @@ class list_news extends Component {
           hai: data.all,
           loading: false
         });
-        console.log(data.one);
+        console.log(data);
       })
       .catch(err => {
         console.log(err);
         this.setState({ loading: true });
       });
     //host new
-    var lang = localStorage.getItem("lang")
-      ? localStorage.getItem("lang")
-      : "/vn";
-    axios
-      .get("http://localhost:8000/hot_news" + lang)
-      .then(req => req.data)
-      .then(data => {
-        this.setState({
-          most: data.most
-        });
-      })
-      .catch(err => {
-        console.log(err);
-        this.setState({ loading: true });
-      });
+    this.host_news();
+    this.category();
   }
   render() {
     let id = this.props.match.params.id;
 
-    const { news, one, cate, hai, most, loading } = this.state;
+    const { news, one, cate, most, loading } = this.state;
     const url = "http://localhost:8000/image/";
     return (
       <div>
+        <Helmet>
+          <title>{cate && cate}</title>
+          <link rel="shortcut icon" href={logo} />
+        </Helmet>
         <Nav />
         {/* {loading ? <h1>loading....</h1> : ""} */}
-        {this.state.loading ? <h1>loading....</h1> : " "}
+        {loading ? <h1>loading....</h1> : ""}
         <div class="section">
           <div class="container">
             <div class="row">
@@ -122,7 +134,16 @@ class list_news extends Component {
                           <span class="post-date">{one && one.created_at}</span>
                         </div>
                         <h3 class="post-title">
-                          <a href="blog-post.html">{one && one.title}</a>
+                          <Link
+                            class="post-img"
+                            to={
+                              one
+                                ? "/detail/" + one.id + "-" + one.slug + ".html"
+                                : ""
+                            }
+                          >
+                            {one && one.title}
+                          </Link>
                         </h3>
                       </div>
                     </div>
@@ -155,7 +176,18 @@ class list_news extends Component {
                                   </span>
                                 </div>
                                 <h3 class="post-title">
-                                  <a href="blog-post.html">{index.title}</a>
+                                  <Link
+                                    class="post-img"
+                                    to={
+                                      "/detail/" +
+                                      index.id +
+                                      "-" +
+                                      index.slug +
+                                      ".html"
+                                    }
+                                  >
+                                    {index.title}
+                                  </Link>
                                 </h3>
                               </div>
                             </div>
@@ -207,7 +239,18 @@ class list_news extends Component {
                                   </span>
                                 </div>
                                 <h3 class="post-title">
-                                  <a href="blog-post.html">{index.title}</a>
+                                  <Link
+                                    class="post-img"
+                                    to={
+                                      "/detail/" +
+                                      index.id +
+                                      "-" +
+                                      index.slug +
+                                      ".html"
+                                    }
+                                  >
+                                    {index.title}
+                                  </Link>
                                 </h3>
                                 <p>
                                   Lorem ipsum dolor sit amet, consectetur
@@ -252,16 +295,16 @@ class list_news extends Component {
                     most.map((index, i) => (
                       <div class="post post-widget">
                         <Link
-                          class="post-img"
                           to={
                             "/detail/" + index.id + "-" + index.slug + ".html"
                           }
+                          class="post-img"
                         >
                           <img src={url + index.image} alt="" />
                         </Link>
                         <div class="post-body">
                           <h3 class="post-title">
-                            <a href="blog-post.html">{index.title}</a>
+                            <a href="#">{index.title}</a>
                           </h3>
                         </div>
                       </div>
@@ -317,4 +360,4 @@ class list_news extends Component {
     );
   }
 }
-export default list_news;
+export default translate(list_news);

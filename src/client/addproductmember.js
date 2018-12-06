@@ -15,6 +15,7 @@ export default class addproductmember extends Component {
   }
 
   componentDidMount() {
+    console.log(moment().subtract(7, "days"));
     let id = localStorage.getItem("id_member");
     axios
       .get("http://localhost:8000/news_member/" + id)
@@ -37,15 +38,13 @@ export default class addproductmember extends Component {
       .then(data => {
         this.setState({ country: data.country });
       });
+
     axios
-      .get("http://localhost:8000/category")
+      .get("http://localhost:8000/category/1")
       .then(req => req.data)
       .then(data => {
-        if (this.state.country == 2) {
-          this.setState({ data: data.en });
-        } else {
-          this.setState({ data: data.vn });
-        }
+        this.setState({ data: data.cate });
+        console.log(data);
       });
   }
   category(event) {
@@ -305,6 +304,7 @@ export default class addproductmember extends Component {
               onKeyUp={this.filter}
             />
             <br />
+
             <table className="table table-bordered">
               <thead>
                 <tr>

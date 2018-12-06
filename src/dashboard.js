@@ -1,6 +1,11 @@
 import React, { Component } from "react";
 import "./css/admin.css";
 import axios from "axios";
+import { Bar } from "react-chartjs-2";
+var views = localStorage.getItem("views");
+var day = localStorage.getItem("day");
+
+// console.log(list(localStorage.getItem("s")));
 class Dashboard extends Component {
   constructor(props) {
     super(props);
@@ -15,8 +20,42 @@ class Dashboard extends Component {
       .then(data => {
         this.setState({ data: data });
       });
+    axios
+      .get("http://localhost:8000/chart")
+      .then(req => req.data)
+      .then(data => {
+        this.setState({ views: data.views, day: data.date });
+        localStorage.setItem("views", data.views);
+        localStorage.setItem("day", data.date);
+      });
+  }
+  componentWillReceiveProps() {
+    axios
+      .get("http://localhost:8000/chart")
+      .then(req => req.data)
+      .then(data => {
+        this.setState({ views: data.views, day: data.date });
+        localStorage.setItem("views", data.views);
+        localStorage.setItem("day", data.date);
+      });
   }
   render() {
+    var day = this.state.day;
+    var view = this.state.views;
+    const data = {
+      labels: day,
+      datasets: [
+        {
+          label: "views",
+          backgroundColor: "rgba(255,99,132,0.2)",
+          borderColor: "rgba(255,99,132,1)",
+          borderWidth: 1,
+          hoverBackgroundColor: "rgba(255,99,132,0.4)",
+          hoverBorderColor: "rgba(255,99,132,1)",
+          data: view
+        }
+      ]
+    };
     return (
       <div className="main-panels">
         <div className="content-wrapper">
@@ -124,7 +163,17 @@ class Dashboard extends Component {
             </div>
           </div>
         </div>
-
+        <div>
+          <h4>View graph of last 7 days</h4>
+          <Bar
+            data={data}
+            width={30}
+            height={400}
+            options={{
+              maintainAspectRatio: false
+            }}
+          />
+        </div>
         <footer
           className="footer"
           style={{ position: "fixed", bottom: "0", width: "100%" }}

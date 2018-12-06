@@ -17,6 +17,7 @@ export default class users extends Component {
     this.name = this.name.bind(this);
     this.email = this.email.bind(this);
     this.password = this.password.bind(this);
+    this.role = this.role.bind(this);
   }
   componentDidMount() {
     axios
@@ -39,6 +40,9 @@ export default class users extends Component {
   }
   password(event) {
     this.setState({ password: event.target.value });
+  }
+  role(event) {
+    this.setState({ role: event.target.value });
   }
   editusers(id) {
     axios.get("http://localhost:8000/editusers/" + id).then(data => {
@@ -304,6 +308,11 @@ export default class users extends Component {
                       <option value="1">Manager</option>
                       <option value="2">Editor</option>
                     </select>
+                    {this.state.role == 0 ? (
+                      <label style={{ color: "red" }}>Role is not empty</label>
+                    ) : (
+                      ""
+                    )}
                   </div>
                   <div className="modal-footer">
                     <button
@@ -315,6 +324,7 @@ export default class users extends Component {
                     </button>
                     {name.length < 6 ||
                     email == "" ||
+                    this.state.role == 0 ||
                     (password == "" && !this.state.id) ? (
                       <button
                         type="submit"

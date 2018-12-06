@@ -42,7 +42,7 @@ export default class news extends Component {
         this.setState({ loading: true });
       });
     axios
-      .get("http://localhost:8000/category")
+      .get("http://localhost:8000/admincategory")
       .then(req => req.data)
       .then(data => {
         this.setState({ cateen: data.en, catevn: data.vn });

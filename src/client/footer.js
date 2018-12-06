@@ -15,16 +15,29 @@ class footer extends Component {
   }
   componentDidMount() {
     axios
-      .get("http://localhost:8000/category")
+      .get("http://localhost:8000/category/" + this.props.t("member.lang"), {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        }
+      })
       .then(req => req.data)
       .then(data => {
-        if (localStorage.getItem("lang") === "/en") {
-          this.setState({ data: data.en });
-        } else if (localStorage.getItem("lang") === "/vn") {
-          this.setState({ data: data.vn });
-        } else {
-          this.setState({ data: data.vn });
+        console.log(data);
+        this.setState({ data: data.cate });
+      });
+  }
+  componentWillReceiveProps(nextProps) {
+    axios
+      .get("http://localhost:8000/category/" + this.props.t("member.lang"), {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
         }
+      })
+      .then(req => req.data)
+      .then(data => {
+        this.setState({ data: data.cate });
       });
   }
   render() {

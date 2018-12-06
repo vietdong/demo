@@ -4,7 +4,14 @@ import axios from "axios";
 import $ from "jquery";
 import { Helmet } from "react-helmet";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-export default class detailnew extends Component {
+import {
+  setTranslations,
+  setDefaultLanguage,
+  translate,
+  setLanguage
+} from "react-multi-lang";
+import Footer from "./footer";
+class detailnew extends Component {
   constructor(props) {
     super(props);
     this.state = { loading: true, data: null, most: "", posts: "" };
@@ -25,11 +32,13 @@ export default class detailnew extends Component {
         console.log(err);
         this.setState({ loading: true });
       });
-    var lang = localStorage.getItem("lang")
-      ? localStorage.getItem("lang")
-      : "/vn";
+
+    this.host_news();
+    this.category();
+  }
+  host_news() {
     axios
-      .get("http://localhost:8000/hot_news" + lang)
+      .get("http://localhost:8000/hot_news/" + this.props.t("member.lang"))
       .then(req => req.data)
       .then(data => {
         this.setState({
@@ -42,6 +51,38 @@ export default class detailnew extends Component {
         this.setState({ loading: true });
       });
   }
+  category() {
+    axios
+      .get("http://localhost:8000/category/" + this.props.t("member.lang"), {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        }
+      })
+      .then(req => req.data)
+      .then(data => {
+        this.setState({ countcate: data.cate });
+      });
+  }
+  componentWillReceiveProps(nextProps) {
+    let id = nextProps.match.params.id;
+    axios
+      .get("http://localhost:8000/detailnew/" + id)
+      .then(req => req.data)
+      .then(data => {
+        this.setState({
+          data: data,
+          loading: false
+        });
+        console.log(data);
+      })
+      .catch(err => {
+        console.log(err);
+        this.setState({ loading: true });
+      });
+    this.host_news();
+    this.category();
+  }
   render() {
     const { data, loading, most, posts } = this.state;
     const url = "http://localhost:8000/image/";
@@ -49,10 +90,7 @@ export default class detailnew extends Component {
       <React.Fragment>
         <Helmet>
           <title>{data && data.slug}</title>
-          <link
-            rel="shortcut icon"
-            href="https://aphoto.vn/wp-content/uploads/2016/09/anh-xoa-phong-phu-thuoc.jpg"
-          />
+          <link rel="shortcut icon" href={data && url + data.image} />
         </Helmet>
         <Navs />
         <div id="post-header" class="page-header">
@@ -66,7 +104,7 @@ export default class detailnew extends Component {
                   </a>
                   <span class="post-date">{data && data.create_date}</span>
                 </div>
-                <h1>Ask HN: Does Anybody Still Use JQuery?</h1>
+                <h1>{data && data.title}</h1>
               </div>
             </div>
           </div>
@@ -196,18 +234,12 @@ export default class detailnew extends Component {
                   {most &&
                     most.map((index, i) => (
                       <div class="post post-widget">
-                        <Link
-                          to={index.id + "-" + index.slug}
-                          class="post-img"
-                          onClick={() => this.clickviews(index.id)}
-                        >
+                        <Link to={index.id + "-" + index.slug} class="post-img">
                           <img src={url + index.image} alt="" />
                         </Link>
                         <div class="post-body">
                           <h3 class="post-title">
-                            <a onClick={() => this.clickviews(index.id)}>
-                              {index.title}
-                            </a>
+                            <a href="#">{index.title}</a>
                           </h3>
                         </div>
                       </div>
@@ -221,11 +253,7 @@ export default class detailnew extends Component {
                   {posts &&
                     posts.map((index, i) => (
                       <div class="post post-thumb">
-                        <Link
-                          to={index.id + "-" + index.slug}
-                          class="post-img"
-                          onClick={() => this.clickviews(index.id)}
-                        >
+                        <Link to={index.id + "-" + index.slug} class="post-img">
                           <img src={url + index.image} alt="" />
                         </Link>
                         <div class="post-body">
@@ -244,9 +272,7 @@ export default class detailnew extends Component {
                             <span class="post-date">March 27, 2018</span>
                           </div>
                           <h3 class="post-title">
-                            <a onClick={() => this.clickviews(index.id)}>
-                              {index.title}
-                            </a>
+                            <a href="">{index.title}</a>
                           </h3>
                         </div>
                       </div>
@@ -259,30 +285,18 @@ export default class detailnew extends Component {
                   </div>
                   <div class="category-widget">
                     <ul>
-                      <li>
-                        <a href="#" class="cat-1">
-                          Web Design
-                          <span>340</span>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#" class="cat-2">
-                          JavaScript
-                          <span>74</span>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#" class="cat-4">
-                          JQuery
-                          <span>41</span>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#" class="cat-3">
-                          CSS
-                          <span>35</span>
-                        </a>
-                      </li>
+                      {this.state.countcate &&
+                        this.state.countcate.map((index, i) => (
+                          <li>
+                            <Link
+                              to={"/list-news/" + index.slug + "/" + index.id}
+                              class="cat-1"
+                            >
+                              {index.name}
+                              <span>{index.countcate}</span>
+                            </Link>
+                          </li>
+                        ))}
                     </ul>
                   </div>
                 </div>
@@ -343,7 +357,9 @@ export default class detailnew extends Component {
             </div>
           </div>
         </div>
+        <Footer />
       </React.Fragment>
     );
   }
 }
+export default translate(detailnew);

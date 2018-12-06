@@ -76,10 +76,10 @@ class detailmember extends Component {
             <div className="section">
               <div className="container">
                 <div className="row">
-                  <div className="col-md-2">
-                    <ul className="list-group">
-                      <li className="list-group-item">
-                        <Link to="edit-member">
+                  <div className="col-md-12 ul-member">
+                    <ul class="nav nav-tabs">
+                      <li class="nav-item">
+                        <Link to="edit-member" class="nav-link">
                           {" "}
                           <i
                             className="fa fa-edit"
@@ -90,8 +90,8 @@ class detailmember extends Component {
                       </li>
                       {this.state.status == 1 && (
                         <React.Fragment>
-                          <li className="list-group-item">
-                            <Link to="add-product-member">
+                          <li class="nav-item">
+                            <Link to="add-product-member" class="nav-link">
                               {" "}
                               <i
                                 className="fa fa-cart-plus"
@@ -101,8 +101,8 @@ class detailmember extends Component {
                             </Link>
                           </li>
 
-                          <li className="list-group-item">
-                            <Link to="client-pay">
+                          <li class="nav-item">
+                            <Link to="client-pay" class="nav-link">
                               {" "}
                               <i
                                 className="fa fa-line-chart"
@@ -113,7 +113,7 @@ class detailmember extends Component {
                           </li>
                         </React.Fragment>
                       )}
-                      <li className="list-group-item">
+                      <li class="nav-item">
                         <a onClick={this.logout}>
                           {" "}
                           <i
@@ -125,7 +125,8 @@ class detailmember extends Component {
                       </li>
                     </ul>
                   </div>
-                  <div className="col-md-10">
+                  <div style={{ height: "20px", width: "100%" }} />
+                  <div className="col-md-12">
                     <Route exact path="/member-login" component={editmember} />
                     <Route exact path="/edit-member" component={editmember} />
                     <Route

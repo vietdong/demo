@@ -6,34 +6,31 @@ import moment from "moment";
 import axios from "axios";
 import $ from "jquery";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-export default class about extends Component {
+import {
+  setTranslations,
+  setDefaultLanguage,
+  translate,
+  setLanguage
+} from "react-multi-lang";
+class about extends Component {
   constructor(props) {
     super(props);
     this.state = { text: "", loading: false, en: "", vn: "" };
   }
   componentDidMount() {
     axios
-      .get("http://localhost:8000/about")
+      .get("http://localhost:8000/about/" + this.props.t("member.lang"))
       .then(req => req.data)
       .then(data => {
-        console.log(data[1].text);
-        if (localStorage.getItem("lang") === "/en") {
-          $("#about").html(data[1].text);
-        } else if (localStorage.getItem("lang") === "/vn") {
-          $("#about").html(data[0].text);
-        } else {
-          $("#about").html(data[0].text);
-        }
+        $("#about").html(data.text);
       })
       .catch(err => {
         console.log(err);
         this.setState({ loading: true });
       });
-    var lang = localStorage.getItem("lang")
-      ? localStorage.getItem("lang")
-      : "/vn";
+
     axios
-      .get("http://localhost:8000/hot_news" + lang)
+      .get("http://localhost:8000/hot_news/" + this.props.t("member.lang"))
       .then(req => req.data)
       .then(data => {
         this.setState({
@@ -44,6 +41,9 @@ export default class about extends Component {
         console.log(err);
         this.setState({ loading: true });
       });
+  }
+  componentWillReceiveProps(nextProps) {
+    this.componentDidMount();
   }
   render() {
     console.log(moment().startOf("day"));
@@ -115,3 +115,4 @@ export default class about extends Component {
     );
   }
 }
+export default translate(about);

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
-import axios from "axios";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import admin from "./admin";
 import hotnew from "./client/hotnew";
@@ -10,7 +9,7 @@ import loginadmin from "./loginadmin";
 import loginmember from "./client/registration";
 import error404 from "./error404";
 import about from "./client/about";
-
+import s from "./client/demo";
 import {
   setTranslations,
   setDefaultLanguage,
@@ -43,18 +42,15 @@ class Index extends Component {
       setLanguage("vn");
     }
   }
-  handleClick(e) {
-    var id = e.target.getAttribute("dd");
-    axios.get("http://localhost:8000/books/" + id);
-  }
+
   render() {
     const { data, role } = this.state;
     return (
       <Router>
         <React.Fragment>
           <Route exact path="/" component={hotnew} />
-          <Route exact path="/en" component={hotnew} />
-          <Route exact path="/vn" component={hotnew} />
+
+          <Route exact path="/demo" component={s} />
           <Route path="/edit-member" component={loginmember} />
           <Route path="/add-product-member" component={loginmember} />
           <Route path="/about" component={about} />
